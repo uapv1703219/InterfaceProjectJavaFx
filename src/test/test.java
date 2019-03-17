@@ -1,21 +1,17 @@
-package main;
+package test;
 
 import java.io.IOException;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.StrokeType;
 import javafx.stage.Stage;
 
 	public class test extends Application {
@@ -23,9 +19,9 @@ import javafx.stage.Stage;
 		static boolean hide;
 		static boolean color;
 		
-		public static void main(String[] args) {
-	        launch(args);
-	    }
+//		public static void main(String[] args) {
+//	        launch(args);
+//	    }
 	    
 	    @Override
 	    public void start(Stage stage) throws IOException {
