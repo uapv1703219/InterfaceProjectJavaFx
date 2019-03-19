@@ -3,6 +3,7 @@ package Controler;
 import java.io.IOException;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -51,6 +52,11 @@ public class MainMenuControler extends Application {
 		{
 	        io.printStackTrace();
 	    }
+	}
+	
+	public void exitApp(ActionEvent event) {
+		Platform.exit();
+        System.exit(0);
 	}
 	
 }

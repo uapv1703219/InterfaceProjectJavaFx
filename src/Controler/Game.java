@@ -13,6 +13,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -27,6 +29,9 @@ public class Game extends Application{
 	
 	@FXML
 	private Pane grille;
+	
+	@FXML
+	private Pane properties;
 	
 	@FXML 
 	private Text errortext;
@@ -43,12 +48,22 @@ public class Game extends Application{
 	@FXML
 	private Text p2score;
 	
+	@FXML
+	private ComboBox<String> difficulty;
+	
+	@FXML
+	private TextField learninginput;
+	
+	@FXML
+	private TextField layersinput;
+	
 	private boolean tour = false;
 	private boolean win = false;
 	private Rectangle[] rectangles = new Rectangle[9];
 	private int scorep1 = 0;
 	private int scorep2 = 0;
 	private WinRectangles winrectangles = new WinRectangles();
+	private boolean showproperties = false;
 	
 	
 	
@@ -78,6 +93,10 @@ public class Game extends Application{
 		 roundp1.setFill(Color.BLUE);
 		 roundp2.setFill(Color.RED);
 		 roundp2.setOpacity(0.5);
+		 
+		 difficulty.getItems().removeAll(difficulty.getItems());
+		 difficulty.getItems().addAll("Facile", "Moyen", "Difficile");
+		 difficulty.getSelectionModel().select("Moyen");
 		 
 	}
 	
@@ -157,7 +176,7 @@ public class Game extends Application{
 			else { perdants[cpt] = i; cpt++; }
 		}
 		
-		System.out.println(Arrays.toString(perdants));
+		//System.out.println(Arrays.toString(perdants));
 		FadeTransition[] fades = new FadeTransition[6];
 		
 		for (int i = 0; i < fades.length; i++) {
@@ -177,6 +196,7 @@ public class Game extends Application{
 		ImageView imageView = (ImageView) ( ((Node) event.getSource()).getScene().lookup("#home"));
 		try 
 		{
+			Grille.resetGrille();
 	        FXMLLoader loader = new FXMLLoader(getClass().getResource("../View/mainMenu.fxml"));
 	        Stage stage = (Stage) imageView.getScene().getWindow();
 	        Scene scene = new Scene(loader.load());
@@ -189,9 +209,36 @@ public class Game extends Application{
 	    }
 	}
 	
+	public void showHideProperties(MouseEvent event)
+	{
+		showproperties = !showproperties;
+		properties.setVisible(showproperties);
+	}
+	
+	public void chooseDificulty(ActionEvent event)
+	{
+		System.out.println(difficulty.getSelectionModel().getSelectedItem());
+		if(difficulty.getSelectionModel().getSelectedItem() == "Facile")
+		{
+			learninginput.setText("5");
+			layersinput.setText("2");
+		}
+		else if(difficulty.getSelectionModel().getSelectedItem() == "Moyen")
+		{
+			learninginput.setText("15");
+			layersinput.setText("5");
+		}
+		else if(difficulty.getSelectionModel().getSelectedItem() == "Difficile")
+		{
+			learninginput.setText("50");
+			layersinput.setText("10");
+		}
+	}
+	
 	public void resetGrille(ActionEvent event) {
 		Grille.resetGrille();
 		for (int i = 0; i < rectangles.length; i++) {
+			rectangles[i].setOpacity(1.0);
 			rectangles[i].setFill(Color.WHITE);
 		}
 		win = false;
