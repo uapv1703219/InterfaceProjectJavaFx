@@ -1,8 +1,11 @@
 package Controler;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import Model.Grille;
+import Model.WinRectangles;
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,6 +21,7 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class Game extends Application{
 	
@@ -44,6 +48,7 @@ public class Game extends Application{
 	private Rectangle[] rectangles = new Rectangle[9];
 	private int scorep1 = 0;
 	private int scorep2 = 0;
+	private WinRectangles winrectangles = new WinRectangles();
 	
 	
 	
@@ -66,7 +71,7 @@ public class Game extends Application{
 	
 	@FXML
 	void initialize() {
-		 for (int i = 0; i < rectangles.length; i++) {		//Recupére les rectangles
+		 for (int i = 0; i < rectangles.length; i++) {		//Recupï¿½re les rectangles
 				rectangles[i] = (Rectangle) grille.getChildren().get(i);
 			}
 		 roundp1.setFill(Color.BLUE);
@@ -77,9 +82,10 @@ public class Game extends Application{
 	
 	public void finDeTour(int pos)
 	{
-		if(Grille.verificationWin(pos))
+		if(Grille.verificationWin(pos, winrectangles))
 		{
 			win = true;
+			fade();
 			if (!tour)
 			{
 				scorep1++;
@@ -90,7 +96,8 @@ public class Game extends Application{
 				scorep2++;
 				p2score.setText(String.valueOf(scorep2));
 			}
-			errorTextInput("Gagné");
+			winrectangles.reset();
+			errorTextInput("GagnÃ©");
 		}
 		else
 		{
@@ -127,10 +134,41 @@ public class Game extends Application{
 					}
 					finDeTour(i);
 				}
-				else errorTextInput("Vous ne pouvez pas jouer sur une case déja jouée !");
+				else errorTextInput("Vous ne pouvez pas jouer sur une case dï¿½ja jouï¿½e !");
 				break;
 			}
 		}
+	}
+	
+	private void fade()
+	{
+		boolean test = false;
+		int[] perdants = new int[6];
+		int cpt = 0;
+		for (int i = 0; i < rectangles.length; i++) {
+			for (int j = 0; j < winrectangles.getWinrectangles().length; j++) {
+				if (i == winrectangles.getWinrectangles()[j]) {
+					test = true;
+					break;
+				}
+			}
+			if(test) { test = false; }
+			else { perdants[cpt] = i; cpt++; }
+		}
+		
+		System.out.println(Arrays.toString(perdants));
+		FadeTransition[] fades = new FadeTransition[6];
+		
+		for (int i = 0; i < fades.length; i++) {
+			
+		}
+		
+//		fade.setDuration(Duration.millis(5000));
+//		fade.setFromValue(10);  
+//        fade.setToValue(0.1);
+//        fade.setNode(rectangles[winrectangles.getWinrectangles()[0]]);
+//        fade.setNode(rectangles[winrectangles.getWinrectangles()[1]]);
+//        fade.play();
 	}
 	
 	private void errorTextInput(String text)
