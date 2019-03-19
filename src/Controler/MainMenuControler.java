@@ -28,6 +28,7 @@ public class MainMenuControler extends Application {
     	Parent root = FXMLLoader.load(getClass().getResource("../View/mainMenu.fxml"));
         stage.setTitle("Morpion : Main Menu");
         stage.setScene(new Scene(root));
+        stage.setResizable(false);
         stage.show();
         }
     	catch(IOException e)

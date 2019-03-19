@@ -60,6 +60,7 @@ public class Game extends Application{
     	Parent root = FXMLLoader.load(getClass().getResource("../View/playWindow.fxml"));
         stage.setTitle("Morpion : Game");
         stage.setScene(new Scene(root));
+        stage.setResizable(false);
         stage.show();
         }
     	catch(IOException e)
@@ -160,15 +161,11 @@ public class Game extends Application{
 		FadeTransition[] fades = new FadeTransition[6];
 		
 		for (int i = 0; i < fades.length; i++) {
-			
+			fades[i] = new FadeTransition(Duration.millis(3000), rectangles[perdants[i]]);
+			fades[i].setFromValue(10);  
+	        fades[i].setToValue(0.1);
+	        fades[i].play();
 		}
-		
-//		fade.setDuration(Duration.millis(5000));
-//		fade.setFromValue(10);  
-//        fade.setToValue(0.1);
-//        fade.setNode(rectangles[winrectangles.getWinrectangles()[0]]);
-//        fade.setNode(rectangles[winrectangles.getWinrectangles()[1]]);
-//        fade.play();
 	}
 	
 	private void errorTextInput(String text)
