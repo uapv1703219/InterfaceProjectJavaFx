@@ -3,6 +3,9 @@ package Controler;
 import java.io.IOException;
 import java.util.Arrays;
 
+import JavaIA.MultiLayerPerceptron;
+import JavaIA.SigmoidalTransferFunction;
+import Model.AI;
 import Model.Grille;
 import Model.WinRectangles;
 import javafx.animation.FadeTransition;
@@ -29,34 +32,30 @@ public class Game extends Application{
 	
 	@FXML
 	private Pane grille;
-	
 	@FXML
 	private Pane properties;
-	
-	@FXML 
-	private Text errortext;
-	
+	@FXML
+	private Pane timerpane;
 	@FXML
 	private Ellipse roundp1;
-	
 	@FXML
 	private Ellipse roundp2;
-	
+	@FXML 
+	private Text errortext;
+	@FXML
+	private Text messagetext;
 	@FXML
 	private Text p1score;
-	
 	@FXML
 	private Text p2score;
-	
 	@FXML
 	private ComboBox<String> difficulty;
-	
 	@FXML
 	private TextField learninginput;
-	
 	@FXML
 	private TextField layersinput;
 	
+	private boolean ai;
 	private boolean tour = false;
 	private boolean win = false;
 	private Rectangle[] rectangles = new Rectangle[9];
@@ -64,10 +63,10 @@ public class Game extends Application{
 	private int scorep2 = 0;
 	private WinRectangles winrectangles = new WinRectangles();
 	private boolean showproperties = false;
+	private boolean showtimer = false;
 	
 	
-	
-	/* -------------------------- Interface --------------------------- */
+	// -------------------------- SETUP SECTION --------------------------- //
 	@Override
 	public void start(Stage stage) throws Exception {
 		try
@@ -98,7 +97,13 @@ public class Game extends Application{
 		 difficulty.getItems().addAll("Facile", "Moyen", "Difficile");
 		 difficulty.getSelectionModel().select("Moyen");
 		 
+		 learninginput.setText(Double.toString(AI.getLearning()));
+		 layersinput.setText(Integer.toString(AI.getNblayers()));
+		 
 	}
+	
+	//-------------------- INTERFACE & GAME SECTION ------------------//
+	
 	
 	public void finDeTour(int pos)
 	{
@@ -110,14 +115,15 @@ public class Game extends Application{
 			{
 				scorep1++;
 				p1score.setText(String.valueOf(scorep1));
+				messageTextInput("Player 1 a gagné !");
 			}
 			else
 			{
 				scorep2++;
 				p2score.setText(String.valueOf(scorep2));
+				messageTextInput("Player 2 a gagné !");
 			}
 			winrectangles.reset();
-			errorTextInput("Gagné");
 		}
 		else
 		{
@@ -130,8 +136,10 @@ public class Game extends Application{
 			}
 			else
 			{
+				AI.play();
 				roundp1.setOpacity(1);
 				roundp2.setOpacity(0.5);
+				tour = !tour;
 			}
 		}
 	}
@@ -177,19 +185,23 @@ public class Game extends Application{
 		}
 		
 		//System.out.println(Arrays.toString(perdants));
-		FadeTransition[] fades = new FadeTransition[6];
 		
-		for (int i = 0; i < fades.length; i++) {
-			fades[i] = new FadeTransition(Duration.millis(3000), rectangles[perdants[i]]);
-			fades[i].setFromValue(10);  
-	        fades[i].setToValue(0.1);
-	        fades[i].play();
+		for (int i = 0; i < perdants.length; i++) {
+			FadeTransition fades = new FadeTransition(Duration.millis(3000), rectangles[perdants[i]]);
+			fades.setFromValue(10);  
+	        fades.setToValue(0.1);
+	        fades.play();
 		}
 	}
 	
 	private void errorTextInput(String text)
 	{
 		errortext.setText(text);
+	}
+	
+	private void messageTextInput(String text)
+	{
+		messagetext.setText(text);
 	}
 	
 	public void homeReturn(MouseEvent event) throws IOException {	//Clic sur maison et retour home
@@ -208,6 +220,9 @@ public class Game extends Application{
 	        io.printStackTrace();
 	    }
 	}
+
+	
+	//-------------------- SHOW/HIDE SECTION-------------------//
 	
 	public void showHideProperties(MouseEvent event)
 	{
@@ -215,25 +230,35 @@ public class Game extends Application{
 		properties.setVisible(showproperties);
 	}
 	
+	public void showTimer()
+	{
+		showtimer = !showtimer;
+		timerpane.setVisible(showtimer);
+	}
+	
 	public void chooseDificulty(ActionEvent event)
 	{
-		System.out.println(difficulty.getSelectionModel().getSelectedItem());
+		//System.out.println(difficulty.getSelectionModel().getSelectedItem());
 		if(difficulty.getSelectionModel().getSelectedItem() == "Facile")
 		{
-			learninginput.setText("5");
-			layersinput.setText("2");
+			AI.setLearning(0.5);
+			AI.setNblayers(2);
 		}
 		else if(difficulty.getSelectionModel().getSelectedItem() == "Moyen")
 		{
-			learninginput.setText("15");
-			layersinput.setText("5");
+			AI.setLearning(0.3);
+			AI.setNblayers(5);
 		}
 		else if(difficulty.getSelectionModel().getSelectedItem() == "Difficile")
 		{
-			learninginput.setText("50");
-			layersinput.setText("10");
+			AI.setLearning(0.1);
+			AI.setNblayers(10);
 		}
+		learninginput.setText(Double.toString(AI.getLearning()));
+		layersinput.setText(Integer.toString(AI.getNblayers()));
 	}
+	
+	//-------------------- RESET SECTION-------------------//
 	
 	public void resetGrille(ActionEvent event) {
 		Grille.resetGrille();
@@ -241,8 +266,40 @@ public class Game extends Application{
 			rectangles[i].setOpacity(1.0);
 			rectangles[i].setFill(Color.WHITE);
 		}
-		win = false;
-		tour = true;
+		errorTextInput("");
+		messageTextInput("");
+		
+		
+		tour = debutTour();
+		//System.out.println(tour);
+		if(win)
+		{
+			for (int i = 0; i < rectangles.length; i++) {
+				FadeTransition tmp = new FadeTransition(Duration.millis(1000), rectangles[i]);
+				tmp.setFromValue(0.1);  
+				tmp.setToValue(10);
+				tmp.play();
+			}
+			win = false;
+		}
+	}
+	
+	private boolean debutTour()
+	{
+		if(Math.random() <= 0.5) {
+			roundp1.setOpacity(0.5);
+			roundp2.setOpacity(1.0);
+			return true; 
+			}
+		else {
+			roundp1.setOpacity(1);
+			roundp2.setOpacity(0.5);
+			return false; 
+			}
 	}
 
+
+
+	
+	
 }

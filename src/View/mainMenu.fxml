@@ -7,7 +7,7 @@
 
 <Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.201" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controler.MainMenuControler">
    <children>
-      <Button fx:id="playButton" layoutX="192.0" layoutY="127.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#launchPlay" prefHeight="70.0" prefWidth="220.0" text="1 VS 1">
+      <Button fx:id="multibutton" layoutX="192.0" layoutY="127.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#launchPlay" prefHeight="70.0" prefWidth="220.0" text="1 VS 1">
          <font>
             <Font size="20.0" />
          </font>
@@ -22,7 +22,7 @@
             <Font size="20.0" />
          </font>
       </Button>
-      <Button fx:id="playButton1" layoutX="192.0" layoutY="217.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#launchPlay" prefHeight="70.0" prefWidth="220.0" text="1 VS AI">
+      <Button fx:id="aibutton" layoutX="192.0" layoutY="217.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#launchPlay" prefHeight="70.0" prefWidth="220.0" text="1 VS AI">
          <font>
             <Font size="20.0" />
          </font>

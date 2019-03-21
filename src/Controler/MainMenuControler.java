@@ -39,7 +39,7 @@ public class MainMenuControler extends Application {
 	}
 	
 	public void launchPlay(ActionEvent event) throws IOException {
-		Button btn = (Button) ( ((Node) event.getSource()).getScene().lookup("#playButton"));
+		Button btn = (Button) ( ((Node) event.getSource()).getScene().lookup("#aibutton"));
 		try 
 		{
 	        FXMLLoader loader = new FXMLLoader(getClass().getResource("../View/playWindow.fxml"));

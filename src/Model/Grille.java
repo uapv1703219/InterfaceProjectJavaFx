@@ -81,13 +81,13 @@ public class Grille {
 		return false;
 	}
 	
-	public int[] getGrille() {
+	public static int[] getGrille() {
 		return grille;
 	}
 
-//	public void setGrille(int[] grille) {
-//		this.grille = grille;
-//	}
+	public static void setGrille(int[] grille) {
+		Grille.grille = grille;
+	}
 	
 	
 }
