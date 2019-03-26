@@ -55,9 +55,10 @@ public class Game extends Application{
 	@FXML
 	private TextField layersinput;
 	
-	private boolean ai;
+	private boolean ai = true;
 	private boolean tour = false;
 	private boolean win = false;
+	private int compteurtour = 0;
 	private Rectangle[] rectangles = new Rectangle[9];
 	private int scorep1 = 0;
 	private int scorep2 = 0;
@@ -107,9 +108,11 @@ public class Game extends Application{
 	
 	public void finDeTour(int pos)
 	{
+		errorTextInput("");
 		if(Grille.verificationWin(pos, winrectangles))
 		{
 			win = true;
+			
 			fade();
 			if (!tour)
 			{
@@ -127,19 +130,43 @@ public class Game extends Application{
 		}
 		else
 		{
-			tour = !tour; //change de tour
-			errorTextInput("");
-			if(tour) 
+			compteurtour++;
+			if(compteurtour == 8) 
 			{
-				roundp1.setOpacity(0.5);
-				roundp2.setOpacity(1.0);
+				win = true;
+				messageTextInput("Egalitée !");
+				return;
+			}
+			tour = !tour; //change de tour
+			if(ai) {
+				int position = AI.play();
+				System.out.println(position);
+				rectangles[position].setFill(Color.RED);
+				System.out.println(Grille.verificationWin(pos, winrectangles));
+				if(Grille.verificationWin(position, winrectangles))
+				{
+					win = true;
+					scorep2++;
+					p2score.setText(String.valueOf(scorep2));
+					fade();
+					messageTextInput("IA a gagné !");
+				}
+				System.out.println(Arrays.toString(Grille.getGrille()));
+				tour = !tour;
+				
 			}
 			else
 			{
-				AI.play();
-				roundp1.setOpacity(1);
-				roundp2.setOpacity(0.5);
-				tour = !tour;
+				if(tour) 
+				{
+					roundp1.setOpacity(0.5);
+					roundp2.setOpacity(1.0);
+				}
+				else
+				{
+					roundp1.setOpacity(1);
+					roundp2.setOpacity(0.5);
+				}
 			}
 		}
 	}
@@ -152,6 +179,7 @@ public class Game extends Application{
 			{
 				if (Grille.putInPosition(tour, i))
 				{
+					//System.out.println(tour);
 					if(tour)		//Tour du Player 1
 					{
 						rectangles[i].setFill(Color.RED);
@@ -187,7 +215,7 @@ public class Game extends Application{
 		//System.out.println(Arrays.toString(perdants));
 		
 		for (int i = 0; i < perdants.length; i++) {
-			FadeTransition fades = new FadeTransition(Duration.millis(3000), rectangles[perdants[i]]);
+			FadeTransition fades = new FadeTransition(Duration.millis(1499), rectangles[perdants[i]]);
 			fades.setFromValue(10);  
 	        fades.setToValue(0.1);
 	        fades.play();
@@ -275,7 +303,7 @@ public class Game extends Application{
 		if(win)
 		{
 			for (int i = 0; i < rectangles.length; i++) {
-				FadeTransition tmp = new FadeTransition(Duration.millis(1000), rectangles[i]);
+				FadeTransition tmp = new FadeTransition(Duration.millis(1500), rectangles[i]);
 				tmp.setFromValue(0.1);  
 				tmp.setToValue(10);
 				tmp.play();
@@ -286,20 +314,21 @@ public class Game extends Application{
 	
 	private boolean debutTour()
 	{
-		if(Math.random() <= 0.5) {
-			roundp1.setOpacity(0.5);
-			roundp2.setOpacity(1.0);
-			return true; 
+		if(ai ) { return false; }
+		else
+		{
+			if(Math.random() <= 0.5) 
+			{
+				roundp1.setOpacity(0.5);
+				roundp2.setOpacity(1.0);
+				return true; 
 			}
-		else {
-			roundp1.setOpacity(1);
-			roundp2.setOpacity(0.5);
-			return false; 
+			else 
+			{
+				roundp1.setOpacity(1);
+				roundp2.setOpacity(0.5);
+				return false; 
 			}
+		}
 	}
-
-
-
-	
-	
 }

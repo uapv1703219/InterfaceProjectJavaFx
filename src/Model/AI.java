@@ -40,15 +40,16 @@ public class AI {
 		double mindemax = 1.0;
 		int pos = 0;
 		int[] coup = Grille.getGrille();
+		System.out.println("hello");
 		
 		for (int j = 0; j < coup.length; j++) {
 			for (int i = 1; i < outputs.length; i++) {
-				if(outputs[i] > max && max < mindemax) { max = outputs[i]; pos = i;}
+				if(outputs[i] > max && outputs[i] < mindemax) { max = outputs[i]; pos = i;}
 			}
 			
 			if(Grille.getGrille()[pos] == 0)
 			{
-				coup[pos] = 2;
+				coup[pos] = 1;
 				Grille.setGrille(coup);
 				System.out.println("Result is : [ ");
 				for (int k = 0; k < coup.length; k++) {
@@ -60,6 +61,7 @@ public class AI {
 			else
 			{
 				mindemax = max;
+				max = 0;
 			}
 		}
 		
