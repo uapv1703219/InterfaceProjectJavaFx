@@ -1,6 +1,7 @@
 package Controler;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import JavaIA.MultiLayerPerceptron;
@@ -66,6 +67,9 @@ public class Game extends Application{
 	private WinRectangles winrectangles = new WinRectangles();
 	private boolean showproperties = false;
 	private boolean showtimer = false;
+	
+	private ArrayList<int[]> coupJ1;
+	private ArrayList<int[]> coupJ2;
 	
 	
 	// -------------------------- SETUP SECTION --------------------------- //
@@ -183,13 +187,23 @@ public class Game extends Application{
 			{
 				if (Grille.putInPosition(tour, i))
 				{
+					int[] tmp = new int[9];
+					int[] coup = new int[9];
 					//System.out.println(tour);
 					if(tour)		//Tour du Player 1
 					{
+						tmp = Grille.getGrille();
+						coupJ1.add(tmp);
+						coup[i] = 1;
+						coupJ1.add(coup);
 						rectangles[i].setFill(Color.RED);
 					}
 					else			//Tour du player 2
 					{
+						tmp = Grille.getGrille();
+						coupJ2.add(tmp);
+						coup[i] = 2;
+						coupJ2.add(coup);
 						rectangles[i].setFill(Color.BLUE);
 					}
 					finDeTour(i);
