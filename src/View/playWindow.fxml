@@ -13,12 +13,12 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="612.0" xmlns="http://javafx.com/javafx/8.0.201" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controler.Game">
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="612.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controler.Game">
    <children>
       <Pane layoutX="127.0" layoutY="29.0" prefHeight="81.0" prefWidth="363.0">
          <children>
-            <Ellipse fx:id="roundp1" fill="DODGERBLUE" layoutX="90.0" layoutY="41.0" radiusX="66.0" radiusY="27.0" stroke="BLACK" strokeType="INSIDE" />
-            <Ellipse fx:id="roundp2" fill="DODGERBLUE" layoutX="257.0" layoutY="41.0" radiusX="66.0" radiusY="27.0" stroke="BLACK" strokeType="INSIDE" />
+            <Ellipse fx:id="roundp1" fill="DODGERBLUE" layoutX="95.0" layoutY="41.0" radiusX="72.0" radiusY="27.0" stroke="BLACK" strokeType="INSIDE" />
+            <Ellipse fx:id="roundp2" fill="DODGERBLUE" layoutX="254.0" layoutY="41.0" radiusX="72.0" radiusY="27.0" stroke="BLACK" strokeType="INSIDE" />
             <Text layoutX="34.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Player 1 :">
                <font>
                   <Font size="18.0" />
@@ -62,7 +62,7 @@
       </Text>
       <ImageView fx:id="home" fitHeight="53.0" fitWidth="60.0" layoutX="533.0" layoutY="414.0" onMouseClicked="#homeReturn" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../ressources/home.png" />
+            <Image url="@../ressources/images/home.png" />
          </image>
          <cursor>
             <Cursor fx:constant="HAND" />
@@ -75,7 +75,7 @@
       </Text>
       <ImageView fx:id="help" fitHeight="40.0" fitWidth="71.0" layoutX="13.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../ressources/interrogationMark.png" />
+            <Image url="@../ressources/images/interrogationMark.png" />
          </image>
          <cursor>
             <Cursor fx:constant="HAND" />
@@ -87,20 +87,20 @@
          </font></Text>
       <ImageView fx:id="gearbutton" fitHeight="53.0" fitWidth="53.0" layoutX="545.0" layoutY="17.0" onMouseClicked="#showHideProperties" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../ressources/gear.png" />
+            <Image url="@../ressources/images/gear.png" />
          </image>
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <Pane fx:id="properties" layoutX="451.0" layoutY="105.0" prefHeight="300.0" prefWidth="162.0" visible="false">
+      <Pane fx:id="properties" layoutX="451.0" layoutY="105.0" prefHeight="300.0" prefWidth="162.0">
          <children>
             <ComboBox fx:id="difficulty" layoutY="1.0" onAction="#chooseDificulty" prefHeight="26.0" prefWidth="160.0" promptText="Facile" />
             <TextField fx:id="learninginput" layoutX="89.0" layoutY="37.0" prefHeight="26.0" prefWidth="70.0" />
             <Text layoutX="2.0" layoutY="55.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Learning :" wrappingWidth="121.99999636411667" />
             <Text layoutX="2.0" layoutY="99.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Layers :" wrappingWidth="121.99999636411667" />
             <TextField fx:id="layersinput" layoutX="89.0" layoutY="81.0" prefHeight="26.0" prefWidth="70.0" />
-            <Button fx:id="setproperties" layoutX="56.0" layoutY="117.0" mnemonicParsing="false" text="Set" />
+            <Button fx:id="setproperties" layoutX="56.0" layoutY="117.0" mnemonicParsing="false" onAction="#setAi" text="Set" />
             <CheckBox fx:id="timerCheckBox" layoutX="3.0" layoutY="151.0" mnemonicParsing="false" onAction="#showTimer" text="Timer" />
          </children>
       </Pane>

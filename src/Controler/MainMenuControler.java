@@ -39,11 +39,13 @@ public class MainMenuControler extends Application {
 	}
 	
 	public void launchPlay(ActionEvent event) throws IOException {
-		Button btn = (Button) ( ((Node) event.getSource()).getScene().lookup("#aibutton"));
+		Button btnAi = (Button) ( ((Node) event.getSource()).getScene().lookup("#aibutton"));
 		try 
 		{
+			if(btnAi == event.getSource()) { Game.setAi(true); }
+			else { Game.setAi(false); }
 	        FXMLLoader loader = new FXMLLoader(getClass().getResource("../View/playWindow.fxml"));
-	        Stage stage = (Stage) btn.getScene().getWindow();
+	        Stage stage = (Stage) btnAi.getScene().getWindow();
 	        Scene scene = new Scene(loader.load());
 	        stage.setScene(scene);
 	        stage.setTitle("Morpion : Game");

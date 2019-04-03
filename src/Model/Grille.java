@@ -17,7 +17,6 @@ public class Grille {
 		
 		if(tour) { nb = 1; }
 		else { nb = 2; }
-		
 		grille[pos] = nb;
 		
 		return true;

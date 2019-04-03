@@ -9,6 +9,7 @@ import Model.AI;
 import Model.Grille;
 import Model.WinRectangles;
 import javafx.animation.FadeTransition;
+import javafx.animation.FillTransition;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -55,7 +56,7 @@ public class Game extends Application{
 	@FXML
 	private TextField layersinput;
 	
-	private boolean ai = true;
+	private static boolean ai = true;
 	private boolean tour = false;
 	private boolean win = false;
 	private int compteurtour = 0;
@@ -101,6 +102,8 @@ public class Game extends Application{
 		 learninginput.setText(Double.toString(AI.getLearning()));
 		 layersinput.setText(Integer.toString(AI.getNblayers()));
 		 
+		 if(ai) { AI.init(); }
+		 
 	}
 	
 	//-------------------- INTERFACE & GAME SECTION ------------------//
@@ -131,10 +134,11 @@ public class Game extends Application{
 		else
 		{
 			compteurtour++;
-			if(compteurtour == 8) 
+			if(compteurtour == 9) 
 			{
 				win = true;
 				messageTextInput("Egalit√©e !");
+				fillTransition();
 				return;
 			}
 			tour = !tour; //change de tour
@@ -196,6 +200,19 @@ public class Game extends Application{
 		}
 	}
 	
+	private void fillTransition()
+	{
+		for (int i = 0; i < rectangles.length; i++) {
+			FillTransition ft = new FillTransition(Duration.millis(3000), rectangles[i], (Color) rectangles[i].getFill(), Color.WHITE);
+			ft.play();
+			
+			FadeTransition fades = new FadeTransition(Duration.millis(1499), rectangles[i]);
+			fades.setFromValue(10);  
+	        fades.setToValue(0.1);
+	        fades.play();
+		}
+	}
+	
 	private void fade()
 	{
 		boolean test = false;
@@ -236,6 +253,7 @@ public class Game extends Application{
 		ImageView imageView = (ImageView) ( ((Node) event.getSource()).getScene().lookup("#home"));
 		try 
 		{
+			if(ai) { AI.saveModel(); }
 			Grille.resetGrille();
 	        FXMLLoader loader = new FXMLLoader(getClass().getResource("../View/mainMenu.fxml"));
 	        Stage stage = (Stage) imageView.getScene().getWindow();
@@ -247,6 +265,16 @@ public class Game extends Application{
 		{
 	        io.printStackTrace();
 	    }
+	}
+	
+	public void setAi()
+	{
+		if (compteurtour != 0) { errorTextInput(""); errorTextInput("Vous ne pouvez modifier l'IA qu'en dÈbut de partie !"); }
+		else
+		{
+			AI.setLearning(Double.parseDouble(learninginput.getText()));
+			AI.setNblayers(Integer.parseInt(layersinput.getText()));
+		}
 	}
 
 	
@@ -297,7 +325,7 @@ public class Game extends Application{
 		errorTextInput("");
 		messageTextInput("");
 		
-		
+		compteurtour = 0;
 		tour = debutTour();
 		//System.out.println(tour);
 		if(win)
@@ -331,4 +359,10 @@ public class Game extends Application{
 			}
 		}
 	}
+
+	public static void setAi(boolean ai) {
+		Game.ai = ai;
+	}
+	
+	
 }
