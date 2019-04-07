@@ -1,8 +1,11 @@
 package Controler;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import com.sun.org.apache.bcel.internal.generic.CPInstruction;
 
 import JavaIA.MultiLayerPerceptron;
 import JavaIA.SigmoidalTransferFunction;
@@ -19,6 +22,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -56,6 +60,8 @@ public class Game extends Application{
 	private TextField learninginput;
 	@FXML
 	private TextField layersinput;
+	@FXML
+	private static ProgressBar bar;
 	
 	private static boolean ai = true;
 	private boolean tour = false;
@@ -68,8 +74,8 @@ public class Game extends Application{
 	private boolean showproperties = false;
 	private boolean showtimer = false;
 	
-	private ArrayList<int[]> coupJ1;
-	private ArrayList<int[]> coupJ2;
+	private ArrayList<int[]> coupJ1 = new ArrayList<int[]>();
+	private ArrayList<int[]> coupJ2 = new ArrayList<int[]>();
 	
 	
 	// -------------------------- SETUP SECTION --------------------------- //
@@ -120,6 +126,8 @@ public class Game extends Application{
 		{
 			win = true;
 			
+			saveCoupsWin(tour);
+			
 			fade();
 			if (!tour)
 			{
@@ -147,19 +155,28 @@ public class Game extends Application{
 			}
 			tour = !tour; //change de tour
 			if(ai) {
+				int[] tmp = new int[9];
+				int[] coup = new int[9];
+				compteurtour++;
 				int position = AI.play();
-				System.out.println(position);
+				//System.out.println(position);
+				tmp = Grille.getGrille().clone();
+				tmp[position] = 0;
+				coupJ1.add(tmp);
+				coup[position] = 1;
+				coupJ1.add(coup);
 				rectangles[position].setFill(Color.RED);
-				System.out.println(Grille.verificationWin(pos, winrectangles));
+				//System.out.println(Grille.verificationWin(pos, winrectangles));
 				if(Grille.verificationWin(position, winrectangles))
 				{
 					win = true;
+					saveCoupsWin(tour);
 					scorep2++;
 					p2score.setText(String.valueOf(scorep2));
 					fade();
 					messageTextInput("IA a gagn√© !");
 				}
-				System.out.println(Arrays.toString(Grille.getGrille()));
+				//System.out.println(Arrays.toString(Grille.getGrille()));
 				tour = !tour;
 				
 			}
@@ -182,17 +199,18 @@ public class Game extends Application{
 	public void playRectangle(MouseEvent event)
 	{
 		if (win) return;
+		int[] tmp = new int[9];
+		int[] coup = new int[9];
 		for (int i = 0; i < rectangles.length; i++) {
 			if(event.getSource().equals(rectangles[i]))
 			{
 				if (Grille.putInPosition(tour, i))
 				{
-					int[] tmp = new int[9];
-					int[] coup = new int[9];
 					//System.out.println(tour);
 					if(tour)		//Tour du Player 1
 					{
-						tmp = Grille.getGrille();
+						tmp = Grille.getGrille().clone();
+						tmp[i] = 0;
 						coupJ1.add(tmp);
 						coup[i] = 1;
 						coupJ1.add(coup);
@@ -200,7 +218,8 @@ public class Game extends Application{
 					}
 					else			//Tour du player 2
 					{
-						tmp = Grille.getGrille();
+						tmp = Grille.getGrille().clone();
+						tmp[i] = 0;
 						coupJ2.add(tmp);
 						coup[i] = 2;
 						coupJ2.add(coup);
@@ -283,14 +302,75 @@ public class Game extends Application{
 	
 	public void setAi()
 	{
-		if (compteurtour != 0) { errorTextInput(""); errorTextInput("Vous ne pouvez modifier l'IA qu'en dÈbut de partie !"); }
+		if (compteurtour != 0) { errorTextInput(""); messageTextInput(""); errorTextInput("Vous ne pouvez modifier l'IA qu'en dÈbut de partie !"); }
 		else
 		{
 			AI.setLearning(Double.parseDouble(learninginput.getText()));
 			AI.setNblayers(Integer.parseInt(layersinput.getText()));
+			AI.learn();
 		}
 	}
+	
+	public static void hideProgressBar()
+	{
+		bar.setVisible(false);
+	}
+	
+	public static void showProgressBar()
+	{
+		bar.setVisible(true);
+	}
+	
+	public static void progressBar(double pourcentage)
+	{
+		bar.setProgress(50.0);
+	}
 
+	private void saveCoupsWin(boolean tour)
+	{
+		try {
+			int[] tmp = null;
+			FileWriter fw = new FileWriter("src/ressources/AiDataLearn/dataCoup.txt", true);
+			if (tour) {
+				for(int i = 0; i < coupJ1.size(); i += 2)
+				{
+					tmp = coupJ1.get(i);
+					for (int j = 0; j < 9; j++) {
+						fw.write(tmp[j] + " ");
+					}
+					fw.write("/ ");
+					tmp = coupJ1.get(i+1);
+					for (int j = 0; j < 9; j++) {
+						fw.write(tmp[j] + " ");
+					}
+					fw.write("\r\n");
+					//System.out.println(Arrays.toString(coupJ1.get(i)));
+				}
+			}
+			else
+			{
+				for(int i = 0; i < coupJ2.size(); i += 2)
+				{
+					tmp = coupJ2.get(i);
+					for (int j = 0; j < 9; j++) {
+						fw.write(tmp[j] + " ");
+					}
+					fw.write("/ ");
+					tmp = coupJ2.get(i+1);
+					for (int j = 0; j < 9; j++) {
+						fw.write(tmp[j] + " ");
+					}
+					fw.write("\r\n");
+					//System.out.println(Arrays.toString(coupJ1.get(i)));
+				}
+			}
+			fw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 	//-------------------- SHOW/HIDE SECTION-------------------//
 	
@@ -338,6 +418,9 @@ public class Game extends Application{
 		}
 		errorTextInput("");
 		messageTextInput("");
+		
+		coupJ1 = new ArrayList<int[]>();
+		coupJ2 = new ArrayList<int[]>();
 		
 		compteurtour = 0;
 		tour = debutTour();

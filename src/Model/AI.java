@@ -4,9 +4,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
+import java.util.Scanner;
+
+import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
 
 import Controler.Game;
 import JavaIA.MultiLayerPerceptron;
@@ -40,6 +46,55 @@ public class AI {
 		{
 			int[] layers = new int[]{ 9, nblayers, 9 };
 			net = new MultiLayerPerceptron(layers, learning, new SigmoidalTransferFunction());
+		}
+	}
+	
+	public static void learn()
+	{
+		double[] output = new double[9];
+		double[] input = new double[9];
+		String line = null;
+		
+		Game.showProgressBar();
+		
+		double error = 0.0;
+		
+		try
+		{
+			File f = new File("src/ressources/AiDataLearn/dataCoup.txt");
+	        Scanner fileScanner = new Scanner(f);
+	        for (int j = 0; j < 100000; j++) {
+	        while(fileScanner.hasNextLine()){
+	           line = fileScanner.nextLine();
+	           
+	        	   for (int i = 0; i < 9; i++) {
+		        	   input[i] = Character.getNumericValue(line.charAt(i*2));
+		        	   output[i] = Character.getNumericValue(line.charAt(i*2 + 20));
+		        	   
+		        	   if(input[i] == 1) { input[i] = 0.5; }
+		        	   else if(input[i] == 2) { input[i] = 1.0; }
+		        	   
+		        	   if(output[i] == 1) { output[i] = 0.5; }
+		        	   else if(output[i] == 2) { output[i] = 1.0; }
+		        	   
+		        	   error += net.backPropagate(input, output);
+		        	   
+		           }
+	        	   
+			}
+	           
+	           //System.out.println(Arrays.toString(input) +" " + Arrays.toString(output));
+	        if ( ((j / 100000.0)* 100.0) % 1.0 == 0.0 ) 
+	        	{
+	        		//System.out.println("Error at step "+j+" is "+ (error/(double)j));
+	        		System.out.println(j / 100000.0);
+	        		Game.progressBar(j / 100000.0);
+	        	}
+	        }
+	        Game.hideProgressBar();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -83,11 +138,11 @@ public class AI {
 			{
 				coup[pos] = 1;
 				Grille.setGrille(coup);
-				System.out.println("Result is : [ ");
-				for (int k = 0; k < coup.length; k++) {
-					System.out.print(coup[k] +" ");
-				}
-				System.out.println("]");
+//				System.out.println("Result is : [ ");
+//				for (int k = 0; k < coup.length; k++) {
+//					System.out.print(coup[k] +" ");
+//				}
+//				System.out.println("]");
 				return pos;
 			}
 			else
@@ -114,6 +169,31 @@ public class AI {
 		}
 		//File monFichier = new File(); 
 	}
+//	public static int countNbrOfLine()
+//	{
+//		try {
+//			File file = new File("src/ressources/AiDataLearn/dataCoup.txt");
+//			if(file.exists())
+//			{
+//				FileReader fr = new FileReader(file);
+//			    LineNumberReader lnr = new LineNumberReader(fr);
+//			    int linenumber = 0;
+//			    
+//	            while (lnr.readLine() != null){
+//	        	linenumber++;
+//	            }
+//	 
+//	            return linenumber;
+//			}
+//			else{
+//				 System.out.println("File does not exists!");
+//			}
+//		}
+//		catch (Exception e) {
+//			// TODO: handle exception
+//		}
+//		return 0;
+//	}
 	
 	public static int getNblayers() {
 		return nblayers;
