@@ -43,6 +43,8 @@ public class Game extends Application{
 	@FXML
 	private Pane timerpane;
 	@FXML
+	private Pane barre;
+	@FXML
 	private Ellipse roundp1;
 	@FXML
 	private Ellipse roundp2;
@@ -60,7 +62,8 @@ public class Game extends Application{
 	private TextField learninginput;
 	@FXML
 	private TextField layersinput;
-	@FXML
+	
+	
 	private static ProgressBar bar;
 	
 	private static boolean ai = true;
@@ -104,6 +107,8 @@ public class Game extends Application{
 		 roundp1.setFill(Color.BLUE);
 		 roundp2.setFill(Color.RED);
 		 roundp2.setOpacity(0.5);
+		 
+		 bar = (ProgressBar) barre.getChildren().get(0);
 		 
 		 difficulty.getItems().removeAll(difficulty.getItems());
 		 difficulty.getItems().addAll("Facile", "Moyen", "Difficile");
@@ -307,23 +312,24 @@ public class Game extends Application{
 		{
 			AI.setLearning(Double.parseDouble(learninginput.getText()));
 			AI.setNblayers(Integer.parseInt(layersinput.getText()));
+			showProgressBar();
 			AI.learn();
 		}
 	}
 	
 	public static void hideProgressBar()
 	{
-		bar.setVisible(false);
+		bar.setVisible(true);
 	}
 	
 	public static void showProgressBar()
 	{
-		bar.setVisible(true);
+		bar.setVisible(false);
 	}
 	
 	public static void progressBar(double pourcentage)
 	{
-		bar.setProgress(50.0);
+		bar.setProgress(pourcentage);
 	}
 
 	private void saveCoupsWin(boolean tour)

@@ -41,6 +41,11 @@
          </children>
       </Pane>
       <Button fx:id="replayButton" layoutX="26.0" layoutY="416.0" mnemonicParsing="false" onAction="#resetGrille" prefHeight="35.0" prefWidth="100.0" text="Replay" />
+      <Pane fx:id="barre" layoutX="139.0" layoutY="439.0" prefHeight="24.0" prefWidth="338.0">
+         <children>
+            <ProgressBar fx:id="bar" prefHeight="24.0" prefWidth="363.0" progress="0.0" visible="false" />
+         </children>
+      </Pane>
       <Text layoutX="261.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Scores :">
          <font>
             <Font size="24.0" />
@@ -85,7 +90,8 @@
       <Text fx:id="errortext" fill="#bc2020" layoutX="162.0" layoutY="427.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="279.0">
          <font>
             <Font size="20.0" />
-         </font></Text>
+         </font>
+      </Text>
       <ImageView fx:id="gearbutton" fitHeight="53.0" fitWidth="53.0" layoutX="545.0" layoutY="17.0" onMouseClicked="#showHideProperties" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../ressources/images/gear.png" />
@@ -125,6 +131,5 @@
             <Font size="20.0" />
          </font>
       </Text>
-      <ProgressBar fx:id="bar" layoutX="202.0" layoutY="457.0" prefWidth="200.0" progress="0.0" />
    </children>
 </Pane>

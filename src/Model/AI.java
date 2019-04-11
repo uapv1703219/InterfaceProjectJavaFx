@@ -58,40 +58,50 @@ public class AI {
 		Game.showProgressBar();
 		
 		double error = 0.0;
+		boolean change = false;
 		
 		try
 		{
 			File f = new File("src/ressources/AiDataLearn/dataCoup.txt");
 	        Scanner fileScanner = new Scanner(f);
-	        for (int j = 0; j < 100000; j++) {
+	        for (int j = 0; j < 100000000; j++) {
+	        	change = false;
+	        	
 	        while(fileScanner.hasNextLine()){
 	           line = fileScanner.nextLine();
 	           
 	        	   for (int i = 0; i < 9; i++) {
 		        	   input[i] = Character.getNumericValue(line.charAt(i*2));
 		        	   output[i] = Character.getNumericValue(line.charAt(i*2 + 20));
-		        	   
-		        	   if(input[i] == 1) { input[i] = 0.5; }
-		        	   else if(input[i] == 2) { input[i] = 1.0; }
-		        	   
-		        	   if(output[i] == 1) { output[i] = 0.5; }
-		        	   else if(output[i] == 2) { output[i] = 1.0; }
-		        	   
-		        	   error += net.backPropagate(input, output);
-		        	   
-		           }
-	        	   
+		        	   if (output[i] == 2 ) { change = true; }
+	        	   }
+	        	   for (int i = 0; i < input.length; i++) {
+	        		   if(change)
+	        		   {
+	        			   if (input[i] == 1) { input[i] = 2; }
+	        			   else if(input[i] == 2) { input[i] = 1; }
+	        			   if (output[i] == 1) { output[i] = 2; }
+	        			   else if(output[i] == 2) { output[i] = 1; }
+	        		   }
+			        	   if(input[i] == 1) { input[i] = 0.5; }
+			        	   else if(input[i] == 2) { input[i] = 1.0; }
+			        	   
+			        	   if(output[i] == 1) { output[i] = 0.5; }
+			        	   else if(output[i] == 2) { output[i] = 1.0; }
+			        	   
+			        	   error += net.backPropagate(input, output);
+	        	   }
 			}
 	           
 	           //System.out.println(Arrays.toString(input) +" " + Arrays.toString(output));
-	        if ( ((j / 100000.0)* 100.0) % 1.0 == 0.0 ) 
+	        if ( ((j / 100000000.0)* 100.0) % 1.0 == 0.0 ) 
 	        	{
 	        		//System.out.println("Error at step "+j+" is "+ (error/(double)j));
-	        		System.out.println(j / 100000.0);
-	        		Game.progressBar(j / 100000.0);
+	        		System.out.println(j / 100000000.0);
+	        		Game.progressBar(j / 100000000.0);
 	        	}
 	        }
-	        Game.hideProgressBar();
+	        //Game.hideProgressBar();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
